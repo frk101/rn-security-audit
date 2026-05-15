@@ -1,5 +1,12 @@
 # RN Security Audit
 
+[![npm version](https://img.shields.io/npm/v/rn-security-audit.svg)](https://www.npmjs.com/package/rn-security-audit)
+[![npm downloads](https://img.shields.io/npm/dw/rn-security-audit.svg)](https://www.npmjs.com/package/rn-security-audit)
+[![GitHub stars](https://img.shields.io/github/stars/frk101/rn-security-audit?style=social)](https://github.com/frk101/rn-security-audit)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-GitHub_Action-2ea44f?logo=github)](https://github.com/marketplace/actions/rn-security-audit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/node/v/rn-security-audit.svg)](https://nodejs.org)
+
 React Native mobil uygulamalarda güvenlik açıklarını otomatik olarak tespit eden araç.
 
 Projenin dizinini ver, çalıştır — sana ne eksik, ne tehlikeli, nasıl düzeltirsin söyler.
