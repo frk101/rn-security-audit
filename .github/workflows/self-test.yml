@@ -1,0 +1,20 @@
+name: Self Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+    name: Action'ın çalıştığını doğrula
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test action - sadece kendi repo'sunu tara
+        uses: ./
+        with:
+          project-dir: '.'
+          fail-on: 'none'   # kendi repo'muz RN projesi olmadığı için fail-on=none
