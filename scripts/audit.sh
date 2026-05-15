@@ -75,9 +75,33 @@ echo -e "  ${RED}BAŞARISIZ: $FAIL${NC}"
 echo ""
 
 if [[ "$FAIL" -gt 0 ]]; then
-  echo -e "${RED}Kritik güvenlik sorunları tespit edildi. Yukarıdaki önerileri uygulayın.${NC}"
-  exit 1
+  echo -e "${RED}Kritik güvenlik sorunları tespit edildi.${NC}"
 else
   echo -e "${GREEN}Kritik sorun bulunamadı.${NC}"
+fi
+
+# Otomatik düzeltme önerisi — sadece interaktif terminalde sor (CI'da atla)
+if [[ "$FAIL" -gt 0 || "$WARN" -gt 0 ]] && [[ -t 0 ]] && [[ "${CI:-}" != "true" ]] && [[ "${RN_AUDIT_NO_FIX:-}" != "1" ]]; then
+  echo ""
+  echo -e "${BOLD}Bazı sorunları otomatik düzeltebilirim:${NC}"
+  echo -e "  • .env dosyasını .gitignore'a ekleme"
+  echo -e "  • AndroidManifest: allowBackup=\"false\" + networkSecurityConfig"
+  echo -e "  • build.gradle: ProGuard'ı açma"
+  echo -e "  • Podfile: Hermes'i açma"
+  echo -e "  • .env.example oluşturma"
+  echo ""
+  echo -e "${YELLOW}Riskli değişiklikler (kod içi credential, izin kaldırma) elle yapılmalı.${NC}"
+  echo ""
+  read -r -p "Otomatik düzeltmeleri uygulayayım mı? [y/N]: " ANSWER
+  if [[ "$ANSWER" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+    bash "$SCRIPT_DIR/fix.sh" "$PROJECT_DIR"
+  else
+    echo -e "${BLUE}Düzeltme atlandı. Yukarıdaki önerileri elle uygulayabilirsin.${NC}"
+  fi
+fi
+
+if [[ "$FAIL" -gt 0 ]]; then
+  exit 1
+else
   exit 0
 fi

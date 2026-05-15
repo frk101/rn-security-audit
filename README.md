@@ -94,6 +94,33 @@ Her `[KRİTİK]` satırının hemen altında `→ Öneri:` yazar — tam olarak 
 
 ---
 
+## Otomatik Düzeltme 🔧
+
+Tarama bittiğinde araç sana sorar:
+```
+Otomatik düzeltmeleri uygulayayım mı? [y/N]:
+```
+
+`y` dersen şu **güvenli** düzeltmeleri otomatik yapar:
+
+| Düzeltme | Ne Yapar? |
+|----------|-----------|
+| `.env` → `.gitignore` | Yeni eklenir, ayrıca git cache'inden çıkarılır |
+| AndroidManifest | `allowBackup="false"` ve `networkSecurityConfig` ekler |
+| `network_security_config.xml` | Dosyayı sıfırdan oluşturur (cleartext kapalı) |
+| `build.gradle` | ProGuard release build için açar |
+| `Podfile` | Hermes'i iOS için açar |
+| `.env.example` | `.env`'deki anahtarları boş değerlerle kopyalar |
+
+**Otomatik yapılmayan riskli değişiklikler** (elle yap):
+- Kod içindeki hardcoded email/şifre kaldırma
+- Android izin kaldırma
+- Bağımlılık güncelleme
+
+CI/CD'de bu prompt **atlanır** (CI=true otomatik tespit edilir). Manuel atlamak için: `RN_AUDIT_NO_FIX=1`
+
+---
+
 ## Ne Kontrol Eder?
 
 ### 1. AndroidManifest Güvenlik Kontrolleri
