@@ -1,0 +1,23 @@
+{
+  "name": "rn-security-audit",
+  "version": "1.1.0",
+  "description": "React Native mobil uygulamalar için güvenlik denetim aracı",
+  "bin": {
+    "rn-security-audit": "bin/rn-security-audit.js"
+  },
+  "scripts": {
+    "audit": "node bin/rn-security-audit.js"
+  },
+  "keywords": [
+    "react-native",
+    "security",
+    "audit",
+    "android",
+    "mobile"
+  ],
+  "author": "Faruk Albayrak",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  }
+}
