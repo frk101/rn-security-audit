@@ -1,6 +1,6 @@
 {
   "name": "rn-security-audit",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "React Native mobil uygulamalar için güvenlik denetim aracı",
   "bin": {
     "rn-security-audit": "bin/rn-security-audit.js"
