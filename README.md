@@ -137,7 +137,7 @@ Kullandığın kütüphanelerde bilinen açık olup olmadığını kontrol eder.
 
 ## CI/CD'ye Eklemek (GitHub Actions)
 
-Her PR açıldığında otomatik çalışmasını istersen:
+Her PR açıldığında otomatik çalışmasını istersen, hazır GitHub Action'ı kullan:
 
 ```yaml
 # .github/workflows/security-audit.yml
@@ -148,15 +148,29 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Run Security Audit
-        run: |
-          git clone https://github.com/KULLANICI_ADI/rn-security-audit.git /tmp/audit
-          chmod +x /tmp/audit/scripts/audit.sh /tmp/audit/scripts/checks/*.sh
-          bash /tmp/audit/scripts/audit.sh ${{ github.workspace }}
+      - uses: actions/checkout@v4
+      - uses: faruk-albayrak/rn-security-audit@v1
+        with:
+          project-dir: '.'         # opsiyonel, varsayılan repo kökü
+          fail-on: 'critical'      # critical | warning | none
 ```
 
-Kritik sorun varsa build otomatik olarak durur.
+### Inputs
+
+| Input | Varsayılan | Açıklama |
+|-------|-----------|----------|
+| `project-dir` | `.` | Taranacak proje dizini |
+| `fail-on` | `critical` | `critical`: sadece kritik varsa build düşer, `warning`: uyarı bile olsa düşer, `none`: hiç düşmez |
+
+### Outputs
+
+| Output | Açıklama |
+|--------|----------|
+| `pass-count` | Geçen kontrol sayısı |
+| `warn-count` | Uyarı sayısı |
+| `fail-count` | Kritik bulgu sayısı |
+
+Her run sonunda GitHub Actions sekmesindeki **Summary**'de özet tablo otomatik gösterilir.
 
 ---
 
@@ -183,3 +197,4 @@ Evet:
 ```bash
 bash ~/Documents/rn-security-audit/scripts/checks/credentials.sh /PROJE/DIZINI
 ```
+# rn-security-audit
