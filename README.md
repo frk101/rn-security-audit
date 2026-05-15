@@ -2,6 +2,8 @@
 
 [![npm version](https://img.shields.io/npm/v/rn-security-audit.svg)](https://www.npmjs.com/package/rn-security-audit)
 [![npm downloads](https://img.shields.io/npm/dw/rn-security-audit.svg)](https://www.npmjs.com/package/rn-security-audit)
+[![Self Test](https://github.com/frk101/rn-security-audit/actions/workflows/self-test.yml/badge.svg)](https://github.com/frk101/rn-security-audit/actions/workflows/self-test.yml)
+[![Known Vulnerabilities](https://snyk.io/test/github/frk101/rn-security-audit/badge.svg)](https://snyk.io/test/github/frk101/rn-security-audit)
 [![GitHub stars](https://img.shields.io/github/stars/frk101/rn-security-audit?style=social)](https://github.com/frk101/rn-security-audit)
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-GitHub_Action-2ea44f?logo=github)](https://github.com/marketplace/actions/rn-security-audit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
