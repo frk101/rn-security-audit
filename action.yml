@@ -1,0 +1,83 @@
+name: 'RN Security Audit'
+description: 'React Native uygulamaları için otomatik güvenlik denetimi (Android + iOS)'
+author: 'Faruk Albayrak'
+branding:
+  icon: 'shield'
+  color: 'red'
+
+inputs:
+  project-dir:
+    description: 'Taranacak React Native projesinin dizini (varsayılan: repo kök dizini)'
+    required: false
+    default: '.'
+  fail-on:
+    description: 'Hangi severity seviyesinde build durdurulsun: critical, warning, none'
+    required: false
+    default: 'critical'
+
+outputs:
+  pass-count:
+    description: 'Başarılı kontrol sayısı'
+    value: ${{ steps.audit.outputs.pass }}
+  warn-count:
+    description: 'Uyarı sayısı'
+    value: ${{ steps.audit.outputs.warn }}
+  fail-count:
+    description: 'Kritik bulgu sayısı'
+    value: ${{ steps.audit.outputs.fail }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Scriptlere çalıştırma izni ver
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/scripts/audit.sh
+        chmod +x ${{ github.action_path }}/scripts/checks/*.sh
+
+    - name: Güvenlik denetimini çalıştır
+      id: audit
+      shell: bash
+      run: |
+        set +e
+        bash ${{ github.action_path }}/scripts/audit.sh "${{ inputs.project-dir }}" | tee /tmp/audit_output.txt
+        AUDIT_EXIT=$?
+
+        # Özet satırlarını parse et
+        PASS=$(grep -oE 'GEÇTI[[:space:]]*:[[:space:]]*[0-9]+' /tmp/audit_output.txt | grep -oE '[0-9]+' | tail -1 || echo "0")
+        WARN=$(grep -oE 'UYARI[[:space:]]*:[[:space:]]*[0-9]+' /tmp/audit_output.txt | grep -oE '[0-9]+' | tail -1 || echo "0")
+        FAIL=$(grep -oE 'BAŞARISIZ[[:space:]]*:[[:space:]]*[0-9]+' /tmp/audit_output.txt | grep -oE '[0-9]+' | tail -1 || echo "0")
+
+        echo "pass=$PASS" >> $GITHUB_OUTPUT
+        echo "warn=$WARN" >> $GITHUB_OUTPUT
+        echo "fail=$FAIL" >> $GITHUB_OUTPUT
+
+        # GitHub Actions Summary
+        {
+          echo "## 🛡️ RN Security Audit Sonucu"
+          echo ""
+          echo "| Durum | Sayı |"
+          echo "|-------|------|"
+          echo "| ✅ Geçti | $PASS |"
+          echo "| ⚠️ Uyarı | $WARN |"
+          echo "| ❌ Kritik | $FAIL |"
+        } >> $GITHUB_STEP_SUMMARY
+
+        # fail-on policy
+        case "${{ inputs.fail-on }}" in
+          critical)
+            if [ "$FAIL" -gt 0 ]; then
+              echo "::error::$FAIL kritik güvenlik sorunu tespit edildi"
+              exit 1
+            fi
+            ;;
+          warning)
+            if [ "$FAIL" -gt 0 ] || [ "$WARN" -gt 0 ]; then
+              echo "::error::Güvenlik sorunları tespit edildi (kritik: $FAIL, uyarı: $WARN)"
+              exit 1
+            fi
+            ;;
+          none)
+            exit 0
+            ;;
+        esac

@@ -149,7 +149,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: faruk-albayrak/rn-security-audit@v1
+      - uses: frk101/rn-security-audit@v1
         with:
           project-dir: '.'         # opsiyonel, varsayılan repo kökü
           fail-on: 'critical'      # critical | warning | none
@@ -197,4 +197,3 @@ Evet:
 ```bash
 bash ~/Documents/rn-security-audit/scripts/checks/credentials.sh /PROJE/DIZINI
 ```
-# rn-security-audit
